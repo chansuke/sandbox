@@ -1,32 +1,32 @@
 module Lillouis
-  @routes = { get:{} }
+  @@routes = { get:{} }
 
   def lillouis(env)
     path = env['PATH_INFO']
     if res = @@routes[:get][path]
       res.call(env)
     else
-      res.call(env)
+      [ 404, headers, not_found ]
     end
   end
 
   def get(path, &blk)
     @@routes[:get][path] = blk
   end
-
-  def headers
-    { 'Content-Type' => 'text/html' }
-  end
 end
 
 Object.send(:include, Lillouis)
 
-get '/' do
+get '/lillouis' do
+  [ 200, headers, lillouis_body ]
+end
+
+get '/' do |env|
   [ 200, headers, top_body(env) ]
 end
 
-get '/lillouis' do
-  [ 200, headers, lillouis_body ]
+def headers
+  { 'Content-Type' => 'text/html' }
 end
 
 def top_body(env)
@@ -42,4 +42,3 @@ def not_found
   ["<img src='http://jaysword.typepad.com/.a/6a0133ee28efb1970b015431f140a3970c-800wi'>"]
 end
 
-run method(:lillouis)
