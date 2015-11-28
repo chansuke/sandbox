@@ -1,16 +1,32 @@
-@routes = { get:{} }
+module Lillouis
+  @routes = { get:{} }
 
-def lillouis(env)
-  path = env['PATH_INFO']
-  case path
-  when '/lillouis' then [ 200, headers, lillouis_body ]
-  when '/'         then [ 200, headers, top_body(env) ]
-  else [ 404, headers, not_found ]
+  def lillouis(env)
+    path = env['PATH_INFO']
+    if res = @@routes[:get][path]
+      res.call(env)
+    else
+      res.call(env)
+    end
+  end
+
+  def get(path, &blk)
+    @@routes[:get][path] = blk
+  end
+
+  def headers
+    { 'Content-Type' => 'text/html' }
   end
 end
 
-def headers
-  { 'Content-Type' => 'text/html' }
+Object.send(:include, Lillouis)
+
+get '/' do
+  [ 200, headers, top_body(env) ]
+end
+
+get '/lillouis' do
+  [ 200, headers, lillouis_body ]
 end
 
 def top_body(env)
