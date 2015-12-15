@@ -1,7 +1,7 @@
 #!/bin/bash
 
 URL=http://your.server.com/
-STATFILE=/home/path-to/monitoring.sh
+STATFILE=/home/path-to/monitoring.stat
 MAIL=youmail@hoge.com
 
 PREVIOUSSTAT=`cat $STATFILE`
